@@ -20,7 +20,10 @@
 				</Sider>
 				<Layout :style="{padding: '19px'}">
 					<Content class="content" ref="contentid">
-            <Messages :my="myprop" /> 
+            <Messages 
+            :my="myprop"
+            :other="otherprop"
+            /> 
 					</Content>
 					<Content :style="{ height: '130px', background: '#fff', marginTop:'10px'}">
 						<textarea
@@ -69,24 +72,19 @@ export default {
 	},
 	methods: {
 		gotMyMsg() {
-      console.log("my value is: " + this.myValue);
-      this.$Message.info('This is a info tip');
-      if(this.myValue !=='') {
+      // console.log("my value is: " + this.myValue);
+      // this.$Message.info('This is a info tip');
+      let user = this.$store.state.privateUser;
+      // console.log(user);
+      if(this.myValue !=='' && user) {
         this.myprop = [];
         this.myprop.push(this.myValue, this.myIndex);
+        this.$refs.contentid.scrollTop = this.$refs.contentid.scrollHeight;
+        this.$socket.emit('privateChat',[user,this.myValue]);
         this.myValue = "";
         this.myIndex++;
-        this.$refs.contentid.scrollTop = this.$refs.contentid.scrollHeight;
       }
     },
-    gotOtherMsg() {
-      console.log("other value is: " + this.otherValue);
-      this.otherprop = [];
-      this.otherprop.push(this.otherValue, this.otherIndex);
-      this.otherValue = "";
-      this.otherIndex++;
-      this.$refs.contentid.scrollTop = this.$refs.contentid.scrollHeight;
-    }
   },
   watch: {
   },
@@ -103,7 +101,7 @@ export default {
       // 在线用户列表,这个功能只在本客户端登录加载联系人时触发
       loginedUserList(list) {
         let myself = list.indexOf(sessionStorage.getItem("username"));
-        console.log("the contact list: " + list);
+        // console.log("the contact list: " + list);
         if( myself > -1) {
           list.splice(myself,1);
         }
@@ -111,15 +109,23 @@ export default {
       },
       // 别的客户端登录时触发这个函数
       userManageAdd(add) {
-        console.log("the user had logined : " + add);
+        // console.log("the user had logined : " + add);
         this.userAdd = [this.userAddindex, add];
         this.userAddindex++;
       },
       // 别的客户端离线后触发这个函数
       userManageDel(del) {
-        console.log("the user had leaved " + del);
+        // console.log("the user had leaved " + del);
         this.userDel = [this.userDelindex, del];
         this.userDelindex++;
+      },
+      // 私聊会话处理
+      privateChat(msg) {
+        // console.log(msg);
+        this.otherprop = [];
+        this.otherprop.push(msg[1], this.otherIndex, msg[0]);
+        this.$refs.contentid.scrollTop = this.$refs.contentid.scrollHeight;
+        this.myIndex++;
       }
   },
 	components: { Avatar, Search, Card, Messages }

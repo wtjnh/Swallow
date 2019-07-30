@@ -1,8 +1,8 @@
 <template>
-  <div style="width:320px">
-    <div v-for="(value, index) in userlist" :key="index" class="userlist">
-      <Card>
-          <div style="text-align: center">
+  <div style="width:320px"  >
+    <div v-for="(value, index) in userlist" :key="index" class="userlist" @click="withChat(value)">
+      <Card :id="value">
+          <div style="text-align: center" >
               <Avatar :style="{float: 'left'}"/>
               <p>{{value}}</p>
           </div>
@@ -13,6 +13,11 @@
 <script>
 import Avatar from '@/components/Avatar'
 export default {
+  data() {
+    return {
+      isTouch: false,
+    }
+  },
   props:["userlist","useradd","userdel"],
   watch: {
     useradd: function() {
@@ -26,6 +31,15 @@ export default {
         this.userlist.splice(del,1);
       }
       // console.log(this.userlist);
+    },
+    userlist() {
+      this.$store.commit('changeUserlist',this.userlist);
+    }
+  },
+  methods: {
+    withChat(value) {
+      this.$store.commit('changeClick',value);
+      this.$store.commit('changeUser',value);
     }
   },
   components: {Avatar}
@@ -36,6 +50,10 @@ export default {
   .userlist {
     width: 200px;
     margin-top: 5px;
+  }
+  .beLight {
+    background: #fff;
+    /* background: lightslategray; */
   }
 </style>
 

@@ -37,7 +37,7 @@ export default {
       {username:this.username,password:this.password},
       {emulateJSON: true})
       .then(response => {
-          console.log(response.bodyText);
+          // console.log(response.bodyText);
           if(response.bodyText === "OK"){
             sessionStorage.setItem("username",un);
             this.$router.push('/Chat');
