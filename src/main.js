@@ -5,8 +5,11 @@ import App from './App'
 import Vuex from 'vuex'
 import router from './router'
 import './plugins/iview.js'
+import {Message} from 'iview'
 import  VueResource  from 'vue-resource'
 import VueSocketIO from 'vue-socket.io'
+
+Vue.prototype.$Message = Message;
 Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
@@ -14,6 +17,8 @@ const store = new Vuex.Store({
     privateUser: '',
     beforePrivateUser:'nobody',
     beClick:[],
+    // 客户端接收来自别的客户端信息，自己没有点击进入聊天状态时，消息提醒为true
+    notify: {}
   },
   getters: {},
   mutations: {
@@ -38,6 +43,9 @@ const store = new Vuex.Store({
         state.beClick.push(payload);
       }
     },
+    beNotify(state,payload) {
+      state.notify[payload[0]] = payload[1];
+    }
   }
 })
 Vue.use(new VueSocketIO({

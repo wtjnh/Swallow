@@ -3,6 +3,8 @@
     <div v-for="(value, index) in userlist" :key="index" class="userlist" @click="withChat(value)">
       <Card :id="value">
           <div style="text-align: center" >
+            <Icon type="ios-text" style="float: right;color:red" size="20" v-show="notify" />
+            <!-- <Icon type="ios-text" /> -->
               <Avatar :style="{float: 'left'}"/>
               <p>{{value}}</p>
           </div>
@@ -15,6 +17,7 @@ import Avatar from '@/components/Avatar'
 export default {
   data() {
     return {
+      notify: false,
       isTouch: false,
     }
   },

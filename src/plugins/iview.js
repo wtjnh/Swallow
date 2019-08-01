@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Button, Card, Layout, MenuItem, Header, Menu, Icon, Drawer, Sider, Submenu, Avatar, Input } from 'iview'
+import { Button, Card, Layout, MenuItem, Header, Menu, Icon, Drawer, Sider, Submenu, Avatar, Input,} from 'iview'
 import 'iview/dist/styles/iview.css'
 
 Vue.component('Button', Button)

@@ -28,6 +28,7 @@ export default {
         username: "",
         password: "",
         missPassOrUser: false,
+        // serverError: false
       };
 	},
   methods: {
@@ -47,13 +48,16 @@ export default {
             this.missPassOrUser = true;
         },
         error => {
+          // serverError = true;
+          this.$Message.error('系统出错啦，等下再试');
           console.log(error);
         }
         );
       this.username = "";
       this.password = "";
-    }
-  }
+    },
+  },
+
 }
 </script>
 <style>

@@ -11,8 +11,8 @@
 				</Menu>
 			</Header>
 			<Layout>
-				<Sider hide-trigger :style="{ background: '#fff', height:'540px' }">
-					<Card
+				<Sider hide-trigger :style="{ background: '#fff', height:'536px' }">
+					<UserList
           :userlist="userList"
           :useradd= "userAdd"
           :userdel= "userDel"
@@ -22,7 +22,7 @@
 					<Content class="content" ref="contentid">
             <Messages 
             :my="myprop"
-            :other="otherprop"
+            :store="storeData"
             /> 
 					</Content>
 					<Content :style="{ height: '130px', background: '#fff', marginTop:'10px'}">
@@ -44,7 +44,7 @@
 <script>
 import Avatar from "@/components/Avatar";
 import Search from "@/components/Search";
-import Card from "@/components/Card";
+import UserList from "@/components/UserList";
 import Messages from "@/components/Messages";
 export default {
 	name: "FirstPage",
@@ -67,6 +67,7 @@ export default {
       otherValue: "",
       otherprop:[],
       otherIndex: 0,
+      storeData:''
 
 		};
 	},
@@ -78,7 +79,7 @@ export default {
       // console.log(user);
       if(this.myValue !=='' && user) {
         this.myprop = [];
-        this.myprop.push(this.myValue, this.myIndex);
+        this.myprop.push(this.myValue, this.myIndex, user, "myself");
         this.$refs.contentid.scrollTop = this.$refs.contentid.scrollHeight;
         this.$socket.emit('privateChat',[user,this.myValue]);
         this.myValue = "";
@@ -100,12 +101,13 @@ export default {
       },
       // 在线用户列表,这个功能只在本客户端登录加载联系人时触发
       loginedUserList(list) {
-        let myself = list.indexOf(sessionStorage.getItem("username"));
-        // console.log("the contact list: " + list);
+        let myself = list[0].indexOf(sessionStorage.getItem("username"));
         if( myself > -1) {
-          list.splice(myself,1);
+          list[0].splice(myself,1);
         }
-        this.userList = list;
+        this.userList = list[0];
+        this.storeData = list[1];
+        console.log(this.storeData);
       },
       // 别的客户端登录时触发这个函数
       userManageAdd(add) {
@@ -119,16 +121,15 @@ export default {
         this.userDel = [this.userDelindex, del];
         this.userDelindex++;
       },
-      // 私聊会话处理
       privateChat(msg) {
-        // console.log(msg);
-        this.otherprop = [];
-        this.otherprop.push(msg[1], this.otherIndex, msg[0]);
+        this.myprop = [];
+        this.myprop.push(msg[1], this.otherIndex, msg[0]);
         this.$refs.contentid.scrollTop = this.$refs.contentid.scrollHeight;
         this.myIndex++;
+
       }
   },
-	components: { Avatar, Search, Card, Messages }
+	components: { Avatar, Search, UserList, Messages }
 };
 </script>
 
@@ -156,7 +157,7 @@ export default {
 	margin-right: 20px;
 }
 .content {
-height: 362px;
+height: 355px;
 background: #fff;
 overflow-y: auto;
 overflow-x: hidden

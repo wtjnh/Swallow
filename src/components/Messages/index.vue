@@ -16,69 +16,73 @@ import Avatar from "@/components/Avatar";
 export default {
 	name: "Messages",
 	components: { Avatar },
-	props: ["my","other"],
+	props: ["my","store"],
 	data() {
 		return {
+      //需要渲染的聊天内容放在这里
       messages: [],
-      mymessages: [],
-      otherMessages: [],
-      getOtherMessage: [],
-      // 存储未点击对话时别人发来的信息
+      // 全部用户的聊天内容放在这里
       storeMessage: {},
-      changeUser: this.$store.state.privateUser,
 		};
-	},
+  },
+  mounted() {
+      window.addEventListener('beforeunload', e => this.beforeunloadHandler(e));
+  },
 	methods: {
+    beforeunloadHandler (e) {
+      // alert("colsed");
+      // console.log("ddddddddddddddddddddddddddddddddddddddddddddddddd");
+      let name = sessionStorage.getItem("username");
+      let messages = {};
+      messages[name] = this.storeMessage;
+      this.$socket.emit('storeMessage', [name,this.storeMessage]);
+    }
   },
   watch: {
     my: function() {
-      this.mymessages = []
-      this.mymessages.push("myself",this.my[0],"avatarMyself");
-      this.messages.push(this.mymessages);
-      // console.log(this.my[1]);
-      // console.log("the user is " + this.changeUser);
-    },
-    other: function() {
       let user = this.$store.state.privateUser;
-      if(user && user === this.other[2]) {
-          this.othermessages = [];
-          this.othermessages.push("other",this.other[0],"avatarOther");
-          this.messages.push(this.othermessages);
+      if(!this.storeMessage.hasOwnProperty(this.my[2])) {
+          this.storeMessage[this.my[2]] = [];
+          if(this.my[3]) {
+            this.storeMessage[this.my[2]].push(["myself",this.my[0],"avatarMyself"]);
+          } else {
+            this.storeMessage[this.my[2]].push(["other",this.my[0],"avatarOther"]);
+          }
       } else {
-        this.getOtherMessage.push(["other",this.other[0],"avatarOther"])
-        console.log(this.other[2])
-        // console.log("other messsage which doesn't show now" + this.getOtherMessage);
-        if(!this.storeMessage.hasOwnProperty(this.other[2])) {
-          this.storeMessage[this.other[2]] = [];
-          this.storeMessage[this.other[2]].push(["other",this.other[0],"avatarOther"]);
-          console.log(this.storeMessage)
-        } else {
-          this.storeMessage[this.other[2]].push(["other",this.other[0],"avatarOther"]);
-          console.log(this.storeMessage)
-        }
+          if(this.my[3]) {
+            this.storeMessage[this.my[2]].push(["myself",this.my[0],"avatarMyself"]);
+          } else {
+            this.storeMessage[this.my[2]].push(["other",this.my[0],"avatarOther"]);
+          }
       }
-      // console.log(this.other[1]);
+      // 判断当前点击的用户是否存在聊天内容，存在就渲染聊天内容
+      if(this.storeMessage.hasOwnProperty(user)) {
+        this.messages = [];
+        this.storeMessage[user].forEach(e => {
+          this.messages.push(e);
+      })
+      }
+      // console.log(this.storeMessage);
     },
+    store: function() {
+      // this.storeMessage = this.storeData[1];
+      this.storeMessage = this.store[1];
+    },
+    // 切换用户时判断切换的用户是否存在聊天内容，存在就渲染聊天内容
     '$store.state.privateUser': function() {
-      let item = this.$store.state.privateUser;
-      let beforeItem = this.$store.state.beforePrivateUser;
-      if(!this.storeMessage.hasOwnProperty(item)) {
-        this.storeMessage[beforeItem] = this.messages;
-        this.messages = [];
-      } else {
-        // if(!item === beforeItem) {}
-        this.storeMessage[beforeItem] = this.messages;
-        this.messages = [];
-        this.storeMessage[item].forEach(e => {
+      this.messages = [];
+      let user = this.$store.state.privateUser;
+      if(this.storeMessage.hasOwnProperty(user)) {
+        this.storeMessage[user].forEach(e => {
           this.messages.push(e);
         });
       }
-      // this.messages = [];
-    }
+    },
   },
-  computed: {},
-  mounted() {
-    // .scrollTop = this.$refs.contentid.scrollHeight;
+  computed: {
+  },
+  destroyed() {
+    window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
   }
 };
 </script>
