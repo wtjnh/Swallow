@@ -30,11 +30,7 @@ export default {
   },
 	methods: {
     beforeunloadHandler (e) {
-      // alert("colsed");
-      // console.log("ddddddddddddddddddddddddddddddddddddddddddddddddd");
       let name = sessionStorage.getItem("username");
-      let messages = {};
-      messages[name] = this.storeMessage;
       this.$socket.emit('storeMessage', [name,this.storeMessage]);
     }
   },
@@ -66,7 +62,14 @@ export default {
     },
     store: function() {
       // this.storeMessage = this.storeData[1];
-      this.storeMessage = this.store[1];
+      // console.log("store is aready");
+      if(this.store) {
+        // console.log(JSON.parse(this.store));
+        let data = JSON.parse(this.store);
+        this.storeMessage = data;
+      }else {
+        // console.log("receive the data is null.");
+      }
     },
     // 切换用户时判断切换的用户是否存在聊天内容，存在就渲染聊天内容
     '$store.state.privateUser': function() {

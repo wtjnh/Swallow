@@ -46,6 +46,7 @@ import Avatar from "@/components/Avatar";
 import Search from "@/components/Search";
 import UserList from "@/components/UserList";
 import Messages from "@/components/Messages";
+import { connect } from 'tls';
 export default {
 	name: "FirstPage",
 	// props: ['message'],
@@ -92,22 +93,30 @@ export default {
   mounted () {
     // 第一次加载页面时可将登录信息加载完毕
     // 第一次加载页面时页面不会刷新，所以socket connect 函数并不会触发，因此只能在mounted 函数内发送登录信息
-    this.$socket.emit('logined message', sessionStorage.getItem("username"));
+    // this.$socket.emit('logined message', sessionStorage.getItem("username"));
+//     var timerOne = window.setInterval(() => {
+//       if (this.$socket) {
+//         this.$socket.emit('logined message', sessionStorage.getItem("username"));
+//         window.clearInterval(timerOne)
+//         return;
+//       }
+//     }, 500)
+    this.$socket.emit('connect','');
   },
   sockets: {
       connect() {
         // 刷新页面时可保持客户端与服务端的链接不中断
+        console.log("socket connect success!");
         this.$socket.emit('logined message', sessionStorage.getItem("username"));
+        // this.$socket.emit('logined message', sessionStorage.getItem("username"));
       },
       // 在线用户列表,这个功能只在本客户端登录加载联系人时触发
       loginedUserList(list) {
-        let myself = list[0].indexOf(sessionStorage.getItem("username"));
+        let myself = list.indexOf(sessionStorage.getItem("username"));
         if( myself > -1) {
-          list[0].splice(myself,1);
+          list.splice(myself,1);
         }
-        this.userList = list[0];
-        this.storeData = list[1];
-        console.log(this.storeData);
+        this.userList = list;
       },
       // 别的客户端登录时触发这个函数
       userManageAdd(add) {
@@ -127,6 +136,11 @@ export default {
         this.$refs.contentid.scrollTop = this.$refs.contentid.scrollHeight;
         this.myIndex++;
 
+      },
+      storeMessage(msg) {
+        // console.log(msg);
+        this.storeData = msg;
+        // console.log("receive the data has done");
       }
   },
 	components: { Avatar, Search, UserList, Messages }
