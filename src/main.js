@@ -18,7 +18,7 @@ const store = new Vuex.Store({
     beforePrivateUser:'nobody',
     beClick:[],
     // 客户端接收来自别的客户端信息，自己没有点击进入聊天状态时，消息提醒为true
-    notify: {}
+    notify:''
   },
   getters: {},
   mutations: {
@@ -44,7 +44,8 @@ const store = new Vuex.Store({
       }
     },
     beNotify(state,payload) {
-      state.notify[payload[0]] = payload[1];
+      state.notify = payload;
+      console.log(state.notify);
     }
   }
 })

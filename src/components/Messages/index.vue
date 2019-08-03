@@ -37,38 +37,40 @@ export default {
   watch: {
     my: function() {
       let user = this.$store.state.privateUser;
+      // 发送消息和接收信息处理
       if(!this.storeMessage.hasOwnProperty(this.my[2])) {
           this.storeMessage[this.my[2]] = [];
           if(this.my[3]) {
             this.storeMessage[this.my[2]].push(["myself",this.my[0],"avatarMyself"]);
           } else {
+            // 消息提醒发送到vuex
+            this.$store.commit("beNotify",this.my[2]);
             this.storeMessage[this.my[2]].push(["other",this.my[0],"avatarOther"]);
           }
       } else {
           if(this.my[3]) {
             this.storeMessage[this.my[2]].push(["myself",this.my[0],"avatarMyself"]);
-          } else {
+          } else {          
+            // 消息提醒发送到vuex
+            this.$store.commit("beNotify",this.my[2]);
             this.storeMessage[this.my[2]].push(["other",this.my[0],"avatarOther"]);
           }
       }
       // 判断当前点击的用户是否存在聊天内容，存在就渲染聊天内容
       if(this.storeMessage.hasOwnProperty(user)) {
         this.messages = [];
+        let notifyList = [];
+
         this.storeMessage[user].forEach(e => {
           this.messages.push(e);
-      })
+        });
+
       }
-      // console.log(this.storeMessage);
     },
-    store: function() {
-      // this.storeMessage = this.storeData[1];
-      // console.log("store is aready");
+    store: function() {;
       if(this.store) {
-        // console.log(JSON.parse(this.store));
         let data = JSON.parse(this.store);
         this.storeMessage = data;
-      }else {
-        // console.log("receive the data is null.");
       }
     },
     // 切换用户时判断切换的用户是否存在聊天内容，存在就渲染聊天内容
