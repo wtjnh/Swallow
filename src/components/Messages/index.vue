@@ -59,7 +59,7 @@ export default {
       // 判断当前点击的用户是否存在聊天内容，存在就渲染聊天内容
       if(this.storeMessage.hasOwnProperty(user)) {
         this.messages = [];
-        let notifyList = [];
+        // let notifyList = [];
 
         this.storeMessage[user].forEach(e => {
           this.messages.push(e);
