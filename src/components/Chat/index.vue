@@ -6,7 +6,6 @@
 					<!-- <div class="layout-logo"></div> -->
           <Avatar :style="{float: 'left'}" />
           <h2 style="color: white; float: left; margin-left:10px">{{clientName}}</h2>
-					<!--  -->
 					<Search :style="{width: '200px', float: 'right'}" />
 				</Menu>
 			</Header>
@@ -59,17 +58,11 @@ export default {
       userAddindex:0,
       userDel: "",
       userDelindex:0,
-      // 这是本人发送时需要处理的数据
+      // 这是发送接收需要处理的数据
 			myValue: "",
       myprop: [],
       myIndex: 0,
-
-      // 这是接收其他人消息时需要接收的数据
-      otherValue: "",
-      otherprop:[],
-      otherIndex: 0,
-      storeData:''
-
+      storeData: ''
 		};
 	},
 	methods: {
@@ -85,6 +78,8 @@ export default {
         this.$socket.emit('privateChat',[user,this.myValue]);
         this.myValue = "";
         this.myIndex++;
+      } else {
+        this.$Message.error("请选择需要发送消息的联系人");
       }
     },
   },
@@ -93,14 +88,6 @@ export default {
   mounted () {
     // 第一次加载页面时可将登录信息加载完毕
     // 第一次加载页面时页面不会刷新，所以socket connect 函数并不会触发，因此只能在mounted 函数内发送登录信息
-    // this.$socket.emit('logined message', sessionStorage.getItem("username"));
-//     var timerOne = window.setInterval(() => {
-//       if (this.$socket) {
-//         this.$socket.emit('logined message', sessionStorage.getItem("username"));
-//         window.clearInterval(timerOne)
-//         return;
-//       }
-//     }, 500)
     this.$socket.emit('connect','');
   },
   sockets: {
