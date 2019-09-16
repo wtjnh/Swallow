@@ -85,6 +85,10 @@ export default {
   },
   watch: {
   },
+  beforeCreate() {
+    if(!sessionStorage.getItem("username"))
+      this.$router.push('/');
+  },
   mounted () {
     // 第一次加载页面时可将登录信息加载完毕
     // 第一次加载页面时页面不会刷新，所以socket connect 函数并不会触发，因此只能在mounted 函数内发送登录信息
@@ -94,7 +98,9 @@ export default {
       connect() {
         // 刷新页面时可保持客户端与服务端的链接不中断
         console.log("socket connect success!");
-        this.$socket.emit('logined message', sessionStorage.getItem("username"));
+        if(sessionStorage.getItem("username")) {
+          this.$socket.emit('logined message', sessionStorage.getItem("username"));
+        }
         // this.$socket.emit('logined message', sessionStorage.getItem("username"));
       },
       // 在线用户列表,这个功能只在本客户端登录加载联系人时触发
