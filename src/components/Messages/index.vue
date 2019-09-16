@@ -70,7 +70,20 @@ export default {
     store: function() {;
       if(this.store) {
         let data = JSON.parse(this.store);
-        this.storeMessage = data;
+        //解决聊天记录加载时可能存在与服务端存在的延迟问题，如果服务端延迟加载，就在现有的聊天记录头部添加
+        //加载完毕后的聊天记录,如果不存在延迟，一切正常进行，即先加载原先的聊天记录，后现有的聊天记录添加
+        //到原先聊天记录的尾部
+        if(!Object.keys(this.storeMessage).length) {
+          this.storeMessage = data;
+        }
+        if(Object.keys(this.storeMessage).length){
+          let obNameArr = Object.getOwnPropertyNames(data);
+          for(let name  of obNameArr) {
+            if(this.storeMessage.hasOwnProperty(name)) {
+              this.storeMessage[name] = [...data[name],...this.storeMessage[name]]
+            }
+          }
+        }
       }
     },
     // 切换用户时判断切换的用户是否存在聊天内容，存在就渲染聊天内容
