@@ -4,7 +4,9 @@
       <Card :id="value">
           <div style="text-align: center" >
             <Icon type="ios-text" style="float: right; color:red; display: none;" size="20" />
-              <Avatar :style="{float: 'left'}"/>
+              <Avatar
+              :avatarName="value"
+              :style="{float: 'left'}"/>
               <p>{{value}}</p>
           </div>
       </Card>

@@ -45,7 +45,7 @@ const store = new Vuex.Store({
     },
     beNotify(state,payload) {
       state.notify = payload;
-      console.log(state.notify);
+      // console.log(state.notify);
     }
   }
 })

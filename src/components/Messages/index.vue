@@ -4,7 +4,15 @@
 			<ul v-if="messages">
         <li v-for="(msg, index) in messages" :key="index" :class="msg[0]">
           <p>{{msg[1]}}</p>
-          <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" :class="msg[2]"/>
+          <div v-if='msg[2] ==="avatarOther"' class="thunb">
+            <Avatar 
+            :avatarName ="msg[3]"
+            :class="msg[2]"/>
+          </div>
+          <div v-else class="thunb">
+            <Avatar v-bind:src="src" :class="msg[2]" />
+          </div>
+          <!-- <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" :class="msg[2]"/> -->
         </li>
       </ul>
 		</div>
@@ -16,13 +24,14 @@ import Avatar from "@/components/Avatar";
 export default {
 	name: "Messages",
 	components: { Avatar },
-	props: ["my","store"],
+	props: ["my","store","src"],
 	data() {
 		return {
       //需要渲染的聊天内容放在这里
       messages: [],
       // 全部用户的聊天内容放在这里
       storeMessage: {},
+      // src:'',
 		};
   },
   mounted() {
@@ -45,7 +54,7 @@ export default {
           } else {
             // 消息提醒发送到vuex
             this.$store.commit("beNotify",this.my[2]);
-            this.storeMessage[this.my[2]].push(["other",this.my[0],"avatarOther"]);
+            this.storeMessage[this.my[2]].push(["other",this.my[0],"avatarOther",this.my[2]]);
           }
       } else {
           if(this.my[3]) {
@@ -53,7 +62,7 @@ export default {
           } else {          
             // 消息提醒发送到vuex
             this.$store.commit("beNotify",this.my[2]);
-            this.storeMessage[this.my[2]].push(["other",this.my[0],"avatarOther"]);
+            this.storeMessage[this.my[2]].push(["other",this.my[0],"avatarOther",this.my[2]]);
           }
       }
       // 判断当前点击的用户是否存在聊天内容，存在就渲染聊天内容
@@ -146,5 +155,8 @@ export default {
   }
   .avatarOther {
     float: left
+  }
+  .thunb{
+    display: inline;
   }
 </style>

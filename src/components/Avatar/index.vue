@@ -1,9 +1,12 @@
 <template>
     <div class="demo-avatar">
-        <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" />
+        <Avatar v-bind:src="src" >{{avatarName}}</Avatar>
     </div>
 </template>
 
 <script>
-export default {}
+export default {
+  props:["src","avatarName"]
+}
+
 </script>

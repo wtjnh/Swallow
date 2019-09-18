@@ -3,8 +3,12 @@
 		<Layout>
 			<Header>
 				<Menu mode="horizontal" theme="dark" active-name="1">
-					<!-- <div class="layout-logo"></div> -->
-          <Avatar :style="{float: 'left'}" />
+					<div class="layout-logo"></div> -->
+          <Avatar
+          :src="src"
+          :style="{float: 'left'}"
+          />
+          <!-- <img v-bind:src="src" alt="nothing" class="round_icon"> -->
           <h2 style="color: white; float: left; margin-left:10px">{{clientName}}</h2>
 					<Search :style="{width: '200px', float: 'right'}" />
 				</Menu>
@@ -22,6 +26,7 @@
             <Messages 
             :my="myprop"
             :store="storeData"
+            :src="src"
             /> 
 					</Content>
 					<Content :style="{ height: '130px', background: '#fff', marginTop:'10px'}">
@@ -62,7 +67,9 @@ export default {
 			myValue: "",
       myprop: [],
       myIndex: 0,
-      storeData: ''
+      storeData: '',
+      // 头像路径
+      src:"",
 		};
 	},
 	methods: {
@@ -86,12 +93,19 @@ export default {
   watch: {
   },
   beforeCreate() {
+
     if(!sessionStorage.getItem("username"))
       this.$router.push('/');
+  },
+  beforeMount() {
+    let randNum = Math.floor(Math.random()*10);
+    this.src = '/static/img/'+randNum+'.png'
+    console.log(this.src);
   },
   mounted () {
     // 第一次加载页面时可将登录信息加载完毕
     // 第一次加载页面时页面不会刷新，所以socket connect 函数并不会触发，因此只能在mounted 函数内发送登录信息
+
     this.$socket.emit('connect','');
   },
   sockets: {
@@ -136,7 +150,7 @@ export default {
         // console.log("receive the data has done");
       }
   },
-	components: { Avatar, Search, UserList, Messages }
+	components: {Avatar,Search, UserList, Messages }
 };
 </script>
 
@@ -148,7 +162,7 @@ export default {
 	border-radius: 4px;
 	overflow: hidden;
 }
-.layout-logo {
+/* .layout-logo {
 	width: 100px;
 	height: 30px;
 	background: #5b6270;
@@ -157,7 +171,7 @@ export default {
 	position: relative;
 	top: 15px;
 	left: 20px;
-}
+} */
 .layout-nav {
 	width: 420px;
 	margin: 0 auto;
@@ -168,6 +182,15 @@ height: 355px;
 background: #fff;
 overflow-y: auto;
 overflow-x: hidden
+}
+.round_icon{
+  width: 34px;
+  height: 34px;
+  display: flex;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar
