@@ -10,7 +10,7 @@
             :class="msg[2]"/>
           </div>
           <div v-else class="thunb">
-            <Avatar v-bind:src="src" :class="msg[2]" />
+            <Avatar :bgc="bgc" :class="msg[2]" />
           </div>
           <!-- <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg" :class="msg[2]"/> -->
         </li>
@@ -24,7 +24,7 @@ import Avatar from "@/components/Avatar";
 export default {
 	name: "Messages",
 	components: { Avatar },
-	props: ["my","store","src"],
+	props: ["my","store","bgc"],
 	data() {
 		return {
       //需要渲染的聊天内容放在这里

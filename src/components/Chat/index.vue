@@ -5,7 +5,8 @@
 				<Menu mode="horizontal" theme="dark" active-name="1">
 					<div class="layout-logo"></div> -->
           <Avatar
-          :src="src"
+          :bgc="bgc"
+          :avatarName="arName"
           :style="{float: 'left'}"
           />
           <!-- <img v-bind:src="src" alt="nothing" class="round_icon"> -->
@@ -26,7 +27,7 @@
             <Messages 
             :my="myprop"
             :store="storeData"
-            :src="src"
+            :bgc="bgc"
             /> 
 					</Content>
 					<Content :style="{ height: '130px', background: '#fff', marginTop:'10px'}">
@@ -70,6 +71,8 @@ export default {
       storeData: '',
       // 头像路径
       src:"",
+      bgc:"",
+      arName:"Me"
 		};
 	},
 	methods: {
@@ -98,9 +101,12 @@ export default {
       this.$router.push('/');
   },
   beforeMount() {
-    let randNum = Math.floor(Math.random()*10);
-    this.src = '/static/img/'+randNum+'.png'
-    console.log(this.src);
+    let color = ["#90EE90","#8B008B","#DC143C","#FFD700","#FF6347"]
+    let randNum = Math.floor(Math.random()*4);
+    this.bgc = color[Math.floor(Math.random()*4)];
+    console.log(this.bgc);
+    // this.src = '/static/img/'+randNum+'.png';
+    // console.log(this.src);
   },
   mounted () {
     // 第一次加载页面时可将登录信息加载完毕

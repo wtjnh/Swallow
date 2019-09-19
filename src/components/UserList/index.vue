@@ -6,6 +6,7 @@
             <Icon type="ios-text" style="float: right; color:red; display: none;" size="20" />
               <Avatar
               :avatarName="value"
+              :bgc="color"
               :style="{float: 'left'}"/>
               <p>{{value}}</p>
           </div>
@@ -20,6 +21,7 @@ export default {
     return {
       notify: false,
       isTouch: false,
+      color:"#008B8B"
     }
   },
   props:["userlist","useradd","userdel"],
