@@ -110,7 +110,7 @@ export default {
 </script>
 <style>
 .login {
-  position: absolute;
+  position: absolute !important;
   top: 0;
   bottom: 0;
   left: 0;
