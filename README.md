@@ -1,6 +1,6 @@
 # swallow
 
-> a app of chat with other one which you want.
+> an app of chat with other one which you want.
 
 ## Build Setup
 
